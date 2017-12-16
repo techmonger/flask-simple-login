@@ -1,6 +1,6 @@
 ## Flask Simple Login without Extensions
 
-### [https://techmonger.github.io/10/flask-authentication/]("https://techmonger.github.io/10/flask-authentication/")
+### [https://techmonger.github.io/10/flask-authentication/]("https://techmonger.github.io/10/flask-simple-authentication/")
 
 ## Getting Started
 
