@@ -1,10 +1,10 @@
 <!doctype html5>
 <html>
 <head>
-  <title>{{ username.title() }} - Home</title>
+  <title>{{ username }} - Home</title>
 </head>
 <body>
-  <h2>Hello {{username.title()}}</h2>
+  <h2>Hello {{username}}</h2>
   <p><a href="{{ url_for('logout', username=username) }}">Logout</a></p>
 </body>
 </html>

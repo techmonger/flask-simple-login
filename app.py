@@ -41,7 +41,7 @@ def create_db():
     """ # Execute this first time to create new db in current directory. """
     db.create_all()
 
-
+@app.route("/", methods=["GET", "POST"])
 @app.route("/signup/", methods=["GET", "POST"])
 def signup():
     """
@@ -65,7 +65,8 @@ def signup():
 
         # Returns salted pwd hash in format : method$salt$hashedvalue
         hashed_pwd = generate_password_hash(password, 'sha256')
-
+        print(hashed_pwd)
+        
         new_user = User(username=username, pass_hash=hashed_pwd)
         db.session.add(new_user)
 
@@ -81,8 +82,8 @@ def signup():
     return render_template("signup.html")
 
 
-@app.route("/", methods=["GET", "POST"])
-# @app.route("/login/", methods=["GET", "POST"])
+# @app.route("/", methods=["GET", "POST"])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
     """
     Provides login functionality by rendering login form on get request.
@@ -113,7 +114,7 @@ def login():
     return render_template("login_form.html")
 
 
-@app.route("/user/<username>/")
+@app.route("/user/<username>")
 def user_home(username):
     """
     Home page for validated users.
