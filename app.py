@@ -26,7 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'configure strong secret key here'
 
 db = SQLAlchemy(app)
-
+# db.create_all()
 
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
