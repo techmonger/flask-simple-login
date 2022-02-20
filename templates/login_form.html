@@ -4,12 +4,15 @@
   <title>Login</title>
 </head>
 <body>
+
   <h2>Login</h2>
+
   <form id="login" action="{{ url_for('login')}}" method="post">
     Username :  <input type="text" id="username" name="username" />
     Password : <input type="password" id="password" name="password" />
     <input type="submit" id="submit" text="Login" />
   </form>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul class=flashes>
@@ -19,5 +22,15 @@
       </ul>
     {% endif %}
   {% endwith %}
+
+  <br>
+  <p>
+    New User ?
+    <br>
+    <a href="{{ url_for('signup') }}">
+      Signup <span style="color: red;">here</span>
+    </a>
+  </p>
+
 </body>
 </html>

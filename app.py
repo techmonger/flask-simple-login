@@ -82,7 +82,7 @@ def signup():
 
 
 @app.route("/", methods=["GET", "POST"])
-@app.route("/login/", methods=["GET", "POST"])
+# @app.route("/login/", methods=["GET", "POST"])
 def login():
     """
     Provides login functionality by rendering login form on get request.
@@ -121,7 +121,7 @@ def user_home(username):
     """
     if not session.get(username):
         abort(401)
-  
+
     return render_template("user_home.html", username=username)
 
 

@@ -9,10 +9,10 @@
 ```
 cd flask-simple-login/
 python
->>> from login_app import create_db
+>>> from app import create_db
 >>> create_db()
 ```
 
-- Run application `python login_app.py`
+- Run application `python app.py`
 - Create new account  http://127.0.0.1:5000/signup
 - Login account  http://127.0.0.1:5000/login
