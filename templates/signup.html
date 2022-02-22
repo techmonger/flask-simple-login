@@ -9,6 +9,12 @@
 
   <form id="signup" action="{{ url_for('signup')}}" method="post">
     Username :  <input type="text" id="username" name="username" />
+    <br><br>
+    Bio :
+    <textarea id="bio" name="bio" rows="4" cols="50" maxlength="200">
+      My Bio.
+    </textarea>
+
     Password : <input type="password" id="password" name="password" />
     <input type="submit" id="submit" text="Signup" />
   </form>

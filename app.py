@@ -8,6 +8,7 @@ Makes use of werkzeug.security for password hashing.
 
 https://techmonger.github.io/10/flask-simple-authentication/
 """
+
 from flask import Flask, render_template, request, url_for, redirect, flash, \
 session, abort
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
@@ -18,7 +19,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db_name = "auth.db"
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{db}'.format(db=db_name)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -31,6 +32,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
+    bio = db.Column(db.String(100), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -55,6 +57,7 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+        bio = request.form['bio']
 
         if not (username and password):
             flash("Username or Password cannot be empty")
@@ -65,9 +68,10 @@ def signup():
 
         # Returns salted pwd hash in format : method$salt$hashedvalue
         hashed_pwd = generate_password_hash(password, 'sha256')
-        print(hashed_pwd)
+        # print(hashed_pwd)
         
-        new_user = User(username=username, pass_hash=hashed_pwd)
+        new_user = User(username=username, bio=bio,
+                         pass_hash=hashed_pwd)
         db.session.add(new_user)
 
         try:
@@ -123,7 +127,11 @@ def user_home(username):
     if not session.get(username):
         abort(401)
 
-    return render_template("user_home.html", username=username)
+    user = User.query.filter_by(username=username).first()
+    return render_template("user_home.html", 
+                            username=username,
+                            bio=user.bio,
+                            )
 
 
 @app.route("/logout/<username>")
