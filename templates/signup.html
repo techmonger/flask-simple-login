@@ -1,42 +1,49 @@
 <!doctype html5>
 <html>
-<head>
-  <title>Sign Up</title>
-</head>
-<body>
+  <head>
+    <title>Sign Up</title>
+  </head>
+  <body>
 
-  <h2>Sign Up</h2>
+    <h2>Sign Up</h2>
 
-  <form id="signup" action="{{ url_for('signup')}}" method="post">
-    Username :  <input type="text" id="username" name="username" />
-    <br><br>
-    Bio :
-    <textarea id="bio" name="bio" rows="4" cols="50" maxlength="200">
-      My Bio.
-    </textarea>
+    <form id="signup" action="/signup/" method="post">
+      Username :  <input type="text" id="username" name="username" />
+      <br><br>
+      
+      Password : <input type="password" id="password" name="password" />
+      <br><br>
+      
+      Bio :
+      <textarea id="bio" name="bio" rows="4" cols="50" maxlength="200"></textarea>
+      <br><br>
 
-    Password : <input type="password" id="password" name="password" />
-    <input type="submit" id="submit" text="Signup" />
-  </form>
+      <input type="file" name="files[]" multiple="true" enctype="multipart/form-data"/>
+      <input type="submit" id="submit" text="Signup" />
+    </form>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class=flashes>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
-  <br>
-  <p>
-    Already have account ?
     <br>
-    <a href="{{ url_for('login') }}">
-      Login <span style="color: red;">here</span>
-    </a>
-  </p>
+    <p>
+      Already have account ?
+      <br>
+      <a href="{{ url_for('login') }}">
+        Login <span style="color: red;">here</span>
+      </a>
+    </p>
 
-</body>
+    <a href="{{ url_for('index') }}">
+      Go to Home <span style="color: red;"></span>
+    </a>
+
+  </body>
 </html>

@@ -10,10 +10,11 @@ https://techmonger.github.io/10/flask-simple-authentication/
 """
 
 from flask import Flask, render_template, request, url_for, redirect, flash, \
-session, abort
+session, abort, send_from_directory
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from werkzeug.utils import secure_filename
+import os
 
 # Change dbname here
 db_name = "auth.db"
@@ -22,6 +23,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+UPLOAD_FOLDER = 'static'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # SECRET_KEY required for session, flash and Flask Sqlalchemy to work
 app.config['SECRET_KEY'] = 'configure strong secret key here'
@@ -32,7 +35,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
-    bio = db.Column(db.String(100), nullable=True)
+    bio = db.Column(db.String(500), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -43,7 +46,12 @@ def create_db():
     """ # Execute this first time to create new db in current directory. """
     db.create_all()
 
-@app.route("/", methods=["GET", "POST"])
+
+@app.route('/static/<filename>')
+def send_reels(filename):
+    return send_from_directory("static", filename)
+
+
 @app.route("/signup/", methods=["GET", "POST"])
 def signup():
     """
@@ -57,7 +65,16 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+
         bio = request.form['bio']
+        files = request.files.getlist('files[]')
+
+        print('-------->', files)
+        for file in files:
+            if file:
+                filename = secure_filename(file.filename)
+                loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(loc)
 
         if not (username and password):
             flash("Username or Password cannot be empty")
@@ -140,6 +157,17 @@ def logout(username):
     session.pop(username, None)
     flash("successfully logged out.")
     return redirect(url_for('login'))
+
+
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    e = 'Error 404, Page not Found'
+    return ( render_template('404.html', e=e), 404 )
 
 
 if __name__ == "__main__":
