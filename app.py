@@ -18,7 +18,6 @@ import os
 
 # Change dbname here
 db_name = "auth.db"
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -36,6 +35,7 @@ class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     bio = db.Column(db.String(500), nullable=True)
+    # profile = db.Column(db.String(600), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -65,16 +65,13 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-
         bio = request.form['bio']
-        files = request.files.getlist('files[]')
 
-        print('-------->', files)
-        for file in files:
-            if file:
-                filename = secure_filename(file.filename)
-                loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(loc)
+        # file = request.files['files[]']
+        # filename = secure_filename(file.filename)
+        # loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # file.save(loc)
+        # print(loc)
 
         if not (username and password):
             flash("Username or Password cannot be empty")
