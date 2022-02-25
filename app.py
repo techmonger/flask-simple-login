@@ -13,7 +13,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, \
 session, abort, send_from_directory
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 import os
 
 # Change dbname here
