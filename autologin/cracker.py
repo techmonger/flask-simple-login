@@ -4,7 +4,7 @@ import time, random
 
 web = webdriver.Chrome()
 Email = "login_bot_"
-passw = str(random.randint(0, 15))
+passw = str(random.randint(0, 50))
 print(f'''
 >>>> passw : {passw}
 ''')
