@@ -18,7 +18,8 @@ chance = counter = 0
 web = webdriver.Chrome()
 
 def fun_signup(Email):
-    web.get('http://127.0.0.1:5000/signup/')
+    # web.get('http://127.0.0.1:5000/signup/')
+    web.get('https://vixtest.herokuapp.com/signup/')
 
     first = web.find_element(By.XPATH, '//*[@id="username"]')
     first.send_keys(Email)
@@ -56,7 +57,8 @@ def fun_signup(Email):
 
 
 def fun_login(passw):
-    web.get('http://127.0.0.1:5000/login/')
+    # web.get('http://127.0.0.1:5000/login/')
+    web.get('https://vixtest.herokuapp.com/login/')
 
     first = web.find_element(By.XPATH, '//*[@id="username"]')
     first.send_keys(Email)
