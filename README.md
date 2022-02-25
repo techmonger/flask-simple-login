@@ -8,20 +8,22 @@
 - Create empty database 
 
 ```
-cd flask-simple-login/
 python
     >>> from app import create_db
     >>> create_db()
 ```
 
-...or,
-    python create_db.py
+- or,  `python create_db.py`
 
-- Run application `python app.py`
+-------------------------------------------------
+
+## Run application 
+`python app.py`
+    
 - Create new account  http://127.0.0.1:5000/signup
 - Login account  http://127.0.0.1:5000/login
 
 ## For Automate Login
 
     cd autologin
-    python auth.db
+    python cracker.py
