@@ -48,8 +48,6 @@ def fun_signup(Email):
     except:
         pass
 
-time.sleep(2)
-Email = fun_signup(Email)[0]
 
 def fun_login(passw):
     web.get('http://127.0.0.1:5000/login/')
@@ -89,6 +87,12 @@ def fun_login(passw):
     except:
         pass
 
+
+# to automate signup
+time.sleep(2)
+Email = fun_signup(Email)[0]
+
+# to automate login
 passw = "0"
 time.sleep(2)
 fun_login(passw)
