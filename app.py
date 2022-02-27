@@ -67,7 +67,11 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+
         bio = request.form['bio']
+        print('=====>>> ', type(bio))
+        if bio is None:
+            bio='hey...'
 
         file = request.files['files[]']        
         filename = secure_filename(file.filename)
@@ -158,7 +162,6 @@ def user_home(username):
 
     from vicks import flower as fire
     obj = fire.Bank_Account(username)
-
     user = User.query.filter_by(username=username).first()
     
     return render_template("user_home.html", 
@@ -189,19 +192,20 @@ def user_account(username):
     '''
 
     obj = fire.Bank_Account(username)
-    check = request.form['check']
-    print(check)
+    pay = request.form['pay']
+    obj_pay = fire.Bank_Account(pay)
 
-    try:
-        if money>0:
-            if check == "1":
-                disp = obj.deposit(money)
-            else:
-                disp = obj.withdraw(money)
-        else:
-            disp = obj.display()
-    except:
+    if money>0:
+        obj_pay.deposit(money)
+        disp = obj.withdraw(money)
+
+        flash(f'''
+        Amount Paid = {money}, ... to Username = {pay}
+        ''')
+
+    else:
         disp = obj.display()
+        flash("Amount should NOT be Negative number.")
 
     user = User.query.filter_by(username=username).first()
     return render_template("user_home.html", 

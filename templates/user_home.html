@@ -9,14 +9,26 @@
     <h3>Bio : {{bio}}</h3>
     <h4 style="color: red;">Account Balance : {{disp}}</h4>
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>
+            <a href="/user/{{username}}">
+              <h2>{{ message }}</h2>
+            </a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     <form action="/account/{{username}}" method="post">
       Enter Amount :  <input type="text" name="money" required>
       <br><br>
-      Deposit : <input value="1" type="radio" name="check" checked>
+      Send to Username : <input type="text" name="pay" required>
       <br><br>
-      Withdraw : <input value="0" type="radio" name="check">
-      <br><br>
-      <input type="submit" text="Submit" />
+      <input type="submit" text="Send Money" />
     </form>
 
     <br><br>
