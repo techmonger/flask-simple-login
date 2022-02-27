@@ -4,8 +4,7 @@
 
 ----------------------------------
 
-[![image](https://user-images.githubusercontent.com/50515418/155764267-ebbadb92-ca9a-432b-bbba-20a4a1728af4.png)](https://vixtest.herokuapp.com/user/bot_1234567891011)
-
+![image](https://user-images.githubusercontent.com/50515418/155883747-0fc10e5f-7376-4efc-afad-380a639d909b.png)
 
 ## Getting Started
 
