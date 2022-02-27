@@ -17,7 +17,7 @@ class Bank_Account:
         self.balance = self.username.get()
 
         if self.balance is None:
-            self.username.set(0)
+            self.username.set(1000)
 
     def deposit(self, amount):
         self.balance = self.username.get()
@@ -31,7 +31,7 @@ class Bank_Account:
 
         if self.balance>=amount:
             self.balance-=amount
-            
+
             self.username.set(self.balance)
         return self.display()
 

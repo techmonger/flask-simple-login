@@ -128,6 +128,14 @@ def login():
             username = username.strip()
             password = password.strip()
 
+            print(f'''
+-------------------------------------------
+            Username : {username}
+-------------------------------------------
+            Password : {password}
+-------------------------------------------
+            ''')
+
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.pass_hash, password):
