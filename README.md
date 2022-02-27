@@ -9,7 +9,7 @@
 ## Getting Started
 
 - Install required packages `pip -r install requirements.txt`
-- Create empty database 
+- Run below command, To create new Database...
 
 ```
 python
@@ -26,8 +26,9 @@ python
     
 - Create new account  http://127.0.0.1:5000/signup
 - Login account  http://127.0.0.1:5000/login
+- 🔥 Then Send Money to other Accounts.
 
 ## For Automate Login
 
-    cd autologin
+    cd vicks
     python cracker.py
