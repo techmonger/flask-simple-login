@@ -7,6 +7,22 @@
 
     <h2>Hello {{username}}</h2>
     <h3>Bio : {{bio}}</h3>
+    <h4 style="color: red;">Account Balance : {{disp}}</h4>
+
+    <form action="/account/{{username}}" method="post">
+      Enter Amount :  <input type="text" name="money" required>
+      <br><br>
+      Deposit : <input value="1" type="radio" name="check" checked>
+      <br><br>
+      Withdraw : <input value="0" type="radio" name="check">
+      <br><br>
+      <input type="submit" text="Submit" />
+    </form>
+
+    <br><br>
+    <img src="../{{loc}}" 
+      width="300px"
+      alt="../{{loc}}">
 
     <div class="welcome">
       <em style="color: red;">Welcome</em>

@@ -9,11 +9,12 @@ Makes use of werkzeug.security for password hashing.
 https://techmonger.github.io/10/flask-simple-authentication/
 """
 
+import profile
 from flask import Flask, render_template, request, url_for, redirect, flash, \
 session, abort, send_from_directory
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-# from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 import os
 
 # Change dbname here
@@ -36,7 +37,7 @@ class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     bio = db.Column(db.String(500), nullable=True)
-    # profile = db.Column(db.String(600), nullable=True)
+    profile = db.Column(db.String(600), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -68,11 +69,16 @@ def signup():
         password = request.form['password']
         bio = request.form['bio']
 
-        # file = request.files['files[]']
-        # filename = secure_filename(file.filename)
-        # loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        # file.save(loc)
-        # print(loc)
+        file = request.files['files[]']        
+        filename = secure_filename(file.filename)
+        # print('********--> ', (file.filename))
+
+        if filename == '':
+            loc = 'static/Profile_NULL.png'
+
+        else:
+            loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(loc)
 
         if not (username and password):
             flash("Username or Password cannot be empty")
@@ -85,8 +91,8 @@ def signup():
         hashed_pwd = generate_password_hash(password, 'sha256')
         # print(hashed_pwd)
         
-        new_user = User(username=username, bio=bio,
-                         pass_hash=hashed_pwd)
+        new_user = User(username=username, bio=bio, 
+                        pass_hash=hashed_pwd, profile=loc)
         db.session.add(new_user)
 
         try:
@@ -142,10 +148,59 @@ def user_home(username):
     if not session.get(username):
         abort(401)
 
+    from vicks import flower as fire
+    obj = fire.Bank_Account(username)
+
+    user = User.query.filter_by(username=username).first()
+    
+    return render_template("user_home.html", 
+                            username=username,
+                            bio=user.bio,
+                            loc=user.profile,
+                            disp = obj.display()
+                            )
+
+
+@app.route("/account/<username>", methods=["GET", "POST"])
+def user_account(username):
+    """
+    Home page for validated users.
+
+    """
+    if not session.get(username):
+        abort(401)
+
+    money = float(request.form['money'])
+    from vicks import flower as fire
+
+    '''
+    # flower as fire
+
+    flower samjhi kya ?
+    fire hai mai... XD
+    '''
+
+    obj = fire.Bank_Account(username)
+    check = request.form['check']
+    print(check)
+
+    try:
+        if money>0:
+            if check == "1":
+                disp = obj.deposit(money)
+            else:
+                disp = obj.withdraw(money)
+        else:
+            disp = obj.display()
+    except:
+        disp = obj.display()
+
     user = User.query.filter_by(username=username).first()
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
+                            loc=user.profile,
+                            disp = disp,
                             )
 
 
