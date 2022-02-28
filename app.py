@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, \
 session, abort, send_from_directory
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 import os
 
 # Change dbname here
@@ -37,7 +37,7 @@ class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     bio = db.Column(db.String(500), nullable=True)
-    profile = db.Column(db.String(600), nullable=True)
+    # profile = db.Column(db.String(600), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -49,13 +49,15 @@ def create_db():
     db.create_all()
 
 
-@app.route('/static/<filename>')
-def send_reels(filename):
-    return send_from_directory("static", filename)
+# @app.route('/static/<filename>')
+# def send_reels(filename):
+#     return send_from_directory("static", filename)
 
 
 @app.route("/signup/", methods=["GET", "POST"])
 def signup():
+    # when someone signup, set amount as 0 in firebase
+
     """
     Implements signup functionality. Allows username and password for new user.
     Hashes password with salt using werkzeug.security.
@@ -65,24 +67,23 @@ def signup():
     """
 
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
 
         bio = request.form['bio']
         print('=====>>> ', type(bio))
         if bio is None:
             bio='hey...'
 
-        file = request.files['files[]']        
-        filename = secure_filename(file.filename)
+        # file = request.files['files[]']        
+        # filename = secure_filename(file.filename)
         # print('********--> ', (file.filename))
 
-        if filename == '':
-            loc = 'static/Profile_NULL.png'
-
-        else:
-            loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(loc)
+        # if filename == '':
+        #     loc = 'static/Profile_NULL.png'
+        # else:
+        #     loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        #     file.save(loc)
 
         if not (username and password):
             flash("Username or Password cannot be empty")
@@ -95,8 +96,7 @@ def signup():
         hashed_pwd = generate_password_hash(password, 'sha256')
         # print(hashed_pwd)
         
-        new_user = User(username=username, bio=bio, 
-                        pass_hash=hashed_pwd, profile=loc)
+        new_user = User(username=username, bio=bio, pass_hash=hashed_pwd)
         db.session.add(new_user)
 
         try:
@@ -132,14 +132,6 @@ def login():
             username = username.strip()
             password = password.strip()
 
-            print(f'''
--------------------------------------------
-            Username : {username}
--------------------------------------------
-            Password : {password}
--------------------------------------------
-            ''')
-
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.pass_hash, password):
@@ -147,6 +139,10 @@ def login():
             return redirect(url_for("user_home", username=username))
         else:
             flash("Invalid username or password.")
+
+            flash('''If your account has lost,
+            please signup again with same username, 
+            your money has not lost yet.''')
 
     return render_template("login_form.html")
 
@@ -167,7 +163,6 @@ def user_home(username):
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
-                            loc=user.profile,
                             disp = obj.display()
                             )
 
@@ -189,6 +184,8 @@ def user_account(username):
 
     flower samjhi kya ?
     fire hai mai... XD
+
+    (firebase chatting feature will be add soon...)
     '''
 
     obj = fire.Bank_Account(username)
@@ -200,7 +197,7 @@ def user_account(username):
         disp = obj.withdraw(money)
 
         flash(f'''
-        Amount Paid = {money}, ... to Username = {pay}
+        Paid Successfully
         ''')
 
     else:
@@ -211,7 +208,6 @@ def user_account(username):
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
-                            loc=user.profile,
                             disp = disp,
                             )
 
