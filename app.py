@@ -37,7 +37,7 @@ class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     bio = db.Column(db.String(500), nullable=True)
-    # profile = db.Column(db.String(600), nullable=True)
+    dp_url = db.Column(db.String(600), nullable=True)
     pass_hash = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -73,7 +73,9 @@ def signup():
         bio = request.form['bio']
         print('=====>>> ', type(bio))
         if bio is None:
-            bio='hey...'
+            bio = 'hey...'
+
+        dp_url = request.form['dp_url'].strip()
 
         # file = request.files['files[]']        
         # filename = secure_filename(file.filename)
@@ -96,7 +98,7 @@ def signup():
         hashed_pwd = generate_password_hash(password, 'sha256')
         # print(hashed_pwd)
         
-        new_user = User(username=username, bio=bio, pass_hash=hashed_pwd)
+        new_user = User(username=username, bio=bio, pass_hash=hashed_pwd, dp_url=dp_url)
         db.session.add(new_user)
 
         try:
@@ -163,6 +165,7 @@ def user_home(username):
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
+                            dp_url=user.dp_url,
                             disp = obj.display()
                             )
 
@@ -208,6 +211,7 @@ def user_account(username):
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
+                            dp_url=user.dp_url,
                             disp = disp,
                             )
 

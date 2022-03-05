@@ -2,6 +2,17 @@
 <html>
   <head>
     <title>{{ username }} - Home</title>
+
+    <style>
+      .image-cropper {
+        width: 300px;
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+    </style>
+
   </head>
   <body>
 
@@ -38,6 +49,10 @@
 
     <div class="welcome">
       <em style="color: red;">Welcome</em>
+    </div>
+
+    <div class="image-cropper">
+      <img style="height: 100%;" src="{{dp_url}}">
     </div>
 
     <p>
