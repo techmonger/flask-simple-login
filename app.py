@@ -9,12 +9,11 @@ Makes use of werkzeug.security for password hashing.
 https://techmonger.github.io/10/flask-simple-authentication/
 """
 
-import profile
 from flask import Flask, render_template, request, url_for, redirect, flash, \
 session, abort, send_from_directory
 from flask_sqlalchemy import sqlalchemy, SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-# from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 import os
 
 # Change dbname here
@@ -49,9 +48,9 @@ def create_db():
     db.create_all()
 
 
-# @app.route('/static/<filename>')
-# def send_reels(filename):
-#     return send_from_directory("static", filename)
+@app.route('/static/<filename>')
+def send_reels(filename):
+    return send_from_directory("static", filename)
 
 
 @app.route("/signup/", methods=["GET", "POST"])
@@ -75,17 +74,26 @@ def signup():
         if bio is None:
             bio = 'hey...'
 
-        dp_url = request.form['dp_url'].strip()
+# --------------------------------------
 
-        # file = request.files['files[]']        
-        # filename = secure_filename(file.filename)
-        # print('********--> ', (file.filename))
+        # dp_url = request.form['dp_url'].strip()
 
-        # if filename == '':
-        #     loc = 'static/Profile_NULL.png'
-        # else:
-        #     loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        #     file.save(loc)
+        file = request.files['files[]']        
+        filename = secure_filename(file.filename)
+        print('********--> ', (file.filename))
+
+        if filename == '':
+            loc = 'static/Profile_NULL.png'
+        else:
+            loc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(loc)
+
+        # saving image in firebase as binary base64
+        from vicks import image_upload as fire
+        obj = fire.Upload(username, loc)
+        obj.img2txt()
+
+# --------------------------------------
 
         if not (username and password):
             flash("Username or Password cannot be empty")
@@ -98,7 +106,7 @@ def signup():
         hashed_pwd = generate_password_hash(password, 'sha256')
         # print(hashed_pwd)
         
-        new_user = User(username=username, bio=bio, pass_hash=hashed_pwd, dp_url=dp_url)
+        new_user = User(username=username, bio=bio, pass_hash=hashed_pwd, dp_url=loc)
         db.session.add(new_user)
 
         try:
@@ -158,10 +166,12 @@ def user_home(username):
     if not session.get(username):
         abort(401)
 
-    from vicks import flower as fire
+    from vicks import image_upload as fire
     obj = fire.Bank_Account(username)
+
     user = User.query.filter_by(username=username).first()
-    
+    up_obj = fire.Upload(username, user.dp_url)
+    up_obj.txt2img()
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
@@ -180,7 +190,7 @@ def user_account(username):
         abort(401)
 
     money = float(request.form['money'])
-    from vicks import flower as fire
+    from vicks import image_upload as fire
 
     '''
     # flower as fire
@@ -208,6 +218,9 @@ def user_account(username):
         flash("Amount should NOT be Negative number.")
 
     user = User.query.filter_by(username=username).first()
+    obj = fire.Upload(username, user.dp_url)
+    obj.txt2img()
+
     return render_template("user_home.html", 
                             username=username,
                             bio=user.bio,
