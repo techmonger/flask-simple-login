@@ -2,20 +2,20 @@
 import base64
 
 def write_image():
-    with open("input.png", "rb") as image2string:
+    with open("gillu.jpg", "rb") as image2string:
         converted_string = base64.b64encode(image2string.read())
     print(converted_string, type(converted_string))
 
-    with open('img2txt.txt', "wb") as file:
+    with open('gillu.txt', "wb") as file:
         file.write(converted_string)
 
 
 def read_image():
-    file = open('encode.txt', 'rb')
+    file = open('gillu.txt', 'rb')
     byte = file.read()
     file.close()
 
-    decodeit = open('output.jpeg', 'wb')
+    decodeit = open('gillu.jpeg', 'wb')
     decodeit.write(base64.b64decode((byte)))
     decodeit.close()
 
