@@ -1,23 +1,41 @@
 <!doctype html5>
 <html>
-<head>
-  <title>Login</title>
-</head>
-<body>
-  <h2>Login</h2>
-  <form id="login" action="{{ url_for('login')}}" method="post">
-    Username :  <input type="text" id="username" name="username" />
-    Password : <input type="password" id="password" name="password" />
-    <input type="submit" id="submit" text="Login" />
-  </form>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class=flashes>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-</body>
+  <head>
+    <title>Login</title>
+  </head>
+  <body>
+
+    <h2>Login</h2>
+
+    <form id="login" action="{{ url_for('login')}}" method="post">
+      Username :  <input type="text" id="username" name="username" />
+      <br><br>
+      Password : <input type="password" id="password" name="password" />
+      <br><br>
+      <input type="submit" id="submit" text="Login" />
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <br>
+    <p>
+      New User ?
+      <br>
+      <a href="{{ url_for('signup') }}">
+        Signup <span style="color: red;">here</span>
+      </a>
+    </p>
+
+    <a href="{{ url_for('index') }}">
+      Go to Home <span style="color: red;"></span>
+    </a>
+  </body>
 </html>

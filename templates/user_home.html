@@ -1,10 +1,107 @@
 <!doctype html5>
 <html>
-<head>
-  <title>{{ username.title() }} - Home</title>
-</head>
-<body>
-  <h2>Hello {{username.title()}}</h2>
-  <p><a href="{{ url_for('logout', username=username) }}">Logout</a></p>
-</body>
+  <head>
+    <title>{{ username }} - Home</title>
+
+    <style>
+      .image-cropper {
+        width: 300px;
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <h2>Hello {{username}}</h2>
+    <h3>Bio : {{bio}}</h3>
+    <h4 style="color: red;">Account Balance : {{disp}}</h4>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>
+            <a href="/user/{{username}}">
+              <h4>{{ message }}</h4>
+            </a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="/account/{{username}}" method="post">
+      Enter Amount :  <input type="text" name="money" required>
+      <br><br>
+      Send to Username : <input type="text" name="pay" required>
+      <br><br>
+      <input type="submit" text="Send Money" />
+    </form>
+
+    <!-- <br><br>
+    <img src="../{{loc}}" 
+      width="300px"
+      alt="../{{loc}}"> -->
+
+    <div class="welcome">
+      <em style="color: red;">Welcome</em>
+    </div>
+
+    <div class="image-cropper">
+      <img style="height: 100%;" src="/{{dp_url}}">
+    </div>
+
+
+    <a target="_blank" 
+        href="https://www.geeksforgeeks.org/live-search-using-flask-and-jquery/">
+        Source Article
+    </a>
+
+    <br><br>
+    <input type="text" class="live-search-box" placeholder="search friends" />
+
+    <ul class="live-search-list" type="None">
+      {% for i in friend_list %}
+        <li>{{ i }}</li>
+      {% endfor %}
+    </ul>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+
+            $('.live-search-list li').each(function(){
+                $(this).attr('data-search-term', $(this).text().toLowerCase());
+            });
+
+            $('.live-search-box').on('keyup', function(){
+                var searchTerm = $(this).val().toLowerCase();
+                $('.live-search-list li').each(function(){
+
+                    if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <p>
+      <a href="{{ url_for('logout', username=username) }}">
+        Logout
+      </a>
+    </p>
+
+    <a href="{{ url_for('index') }}">
+      Go to Home <span style="color: red;"></span>
+    </a>
+
+  </body>
 </html>
